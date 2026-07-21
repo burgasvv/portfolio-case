@@ -1,0 +1,25 @@
+
+services:
+
+  postgres:
+    image: postgres:latest
+    container_name: portfolio-case-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: portfolio-case-db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    networks:
+      - new-network
+    ports:
+      - "5000:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql
+
+volumes:
+  postgres-data:
+
+networks:
+  new-network:
+    name: new-network
+    external: true

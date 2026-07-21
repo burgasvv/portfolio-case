@@ -1,6 +1,8 @@
 package org.burgas
 
 import io.ktor.server.application.Application
+import org.burgas.router.configureSecurityRouter
+import org.burgas.security.configureSecurity
 import org.burgas.serialization.configureSerialization
 
 fun main(args: Array<String>) {
@@ -9,4 +11,6 @@ fun main(args: Array<String>) {
 
 fun Application.modules() {
     configureSerialization()
+    configureSecurity()
+    configureSecurityRouter()
 }

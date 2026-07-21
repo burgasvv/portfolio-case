@@ -6,3 +6,7 @@ ktor:
   application:
     modules:
       - org.burgas.MainKt.modules
+
+api:
+  ktor-server:
+    url: '$KTOR_SERVER_URL:http://localhost:9000'
