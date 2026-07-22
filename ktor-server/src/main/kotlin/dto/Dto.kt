@@ -4,6 +4,7 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import org.burgas.database.Authority
+import org.burgas.serialization.UUIDSerializer
 import java.util.*
 
 interface Request {
@@ -23,6 +24,17 @@ data class ExceptionResponse(
     val status: String,
     val code: Int,
     val message: String?
+)
+
+@Serializable
+data class AuthToken(
+    val token: String
+)
+
+@Serializable
+data class AuthRequest(
+    val email: String,
+    val password: String
 )
 
 @Serializable

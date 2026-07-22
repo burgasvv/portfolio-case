@@ -15,3 +15,6 @@ postgres:
 api:
   ktor-server:
     url: '$KTOR_SERVER_URL:http://localhost:9000'
+
+jwt:
+  secret: '1a091b7f-21db-4ebe-8cec-d55b3836c7fc'
