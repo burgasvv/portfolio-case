@@ -134,7 +134,9 @@ data class ProfessionResponse(
 data class PortfolioRequest(
     @Contextual
     override val id: UUID?,
+    @Contextual
     val professionId: UUID?,
+    @Contextual
     val identityId: UUID?,
     val description: String?
 ) : Request
@@ -184,6 +186,7 @@ data class ProjectRequest(
     override val id: UUID?,
     val name: String?,
     val description: String?,
+    @Contextual
     val portfolioId: UUID?,
     val link: String?
 ) : Request
