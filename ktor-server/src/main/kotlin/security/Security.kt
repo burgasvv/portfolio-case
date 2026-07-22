@@ -32,6 +32,7 @@ fun Application.configureSecurity() {
                 }
             }
             challenge { defaultScheme, realm ->
+                call.sessions.clear(AuthToken::class)
                 call.respond(HttpStatusCode.Unauthorized,
                     "JWT Token unavailable: $realm :: $defaultScheme")
             }
