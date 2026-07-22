@@ -10,6 +10,7 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.modules.SerializersModule
 import java.util.UUID
 
 fun Application.configureSerialization() {
@@ -20,10 +21,13 @@ fun Application.configureSerialization() {
                 allowSpecialFloatingPointValues = true
                 prettyPrint = true
                 allowTrailingComma = true
-                explicitNulls = true
+                explicitNulls = false
                 ignoreUnknownKeys = true
                 isLenient = true
                 useArrayPolymorphism = true
+                serializersModule = SerializersModule {
+                    contextual(UUID::class, UUIDSerializer)
+                }
             }
         )
     }

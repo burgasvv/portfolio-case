@@ -72,9 +72,9 @@ object IdentityTable : UUIDTable("identity") {
     val password = varchar("password", 100)
     val status = bool("status").default(true)
     val phone = varchar("phone", 20).uniqueIndex().check { it regexp "^\\+?[0-9\\s\\-\\(\\)]{7,25}$" }
-    val telegram = varchar("telegram", 100).uniqueIndex().check { it like "@%" }
-    val whatsapp = varchar("whatsapp", 100).uniqueIndex().check { it like "@%" }
-    val max = varchar("max", 100).uniqueIndex().check { it like "@%" }
+    val telegram = varchar("telegram", 100).nullable().uniqueIndex().check { it like "@%" }
+    val whatsapp = varchar("whatsapp", 100).nullable().uniqueIndex().check { it like "@%" }
+    val max = varchar("max", 100).nullable().uniqueIndex().check { it like "@%" }
     val firstname = varchar("firstname", 100)
     val lastname = varchar("lastname", 100)
     val patronymic = varchar("patronymic", 100)
@@ -113,7 +113,7 @@ object ProjectTable : UUIDTable("project") {
         name = "portfolio_id", refColumn = PortfolioTable.id,
         onDelete = ReferenceOption.CASCADE, onUpdate = ReferenceOption.CASCADE
     )
-    val link = text("link").uniqueIndex()
+    val link = text("link").nullable().uniqueIndex()
     val createdAt = datetime("created_at").defaultExpression(CurrentDateTime)
     val imageId = optReference(
         name = "image_id", refColumn = ImageTable.id,
