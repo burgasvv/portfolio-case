@@ -15,6 +15,7 @@ application {
 kotlin {
     jvmToolchain(25)
 }
+
 dependencies {
     implementation(ktorLibs.serialization.kotlinx.json)
     implementation(ktorLibs.server.config.yaml)
@@ -37,6 +38,9 @@ dependencies {
     implementation("io.ktor:ktor-server-auth-jwt:3.5.0")
     implementation("io.insert-koin:koin-ktor:4.2.2")
     implementation("io.insert-koin:koin-logger-slf4j:4.2.2")
+    implementation("io.ktor:ktor-server-swagger:3.5.0")
+    implementation("io.ktor:ktor-server-routing-openapi:3.5.0")
+    implementation("io.ktor:ktor-server-compression:3.5.0")
 
     testImplementation(kotlin("test"))
     testImplementation(ktorLibs.server.testHost)

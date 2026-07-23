@@ -157,7 +157,8 @@ fun Application.configureIdentityRouter() {
 
                 post("/upload-image") {
                     val identityId = UUID.fromString(call.parameters["identityId"])
-                    identityService.uploadImage(identityId, call.receiveMultipart(Long.MAX_VALUE))
+                    val multiPartData = call.receiveMultipart(Long.MAX_VALUE)
+                    identityService.uploadImage(identityId, multiPartData)
                     call.respond(HttpStatusCode.OK)
                 }
 
