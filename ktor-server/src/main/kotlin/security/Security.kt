@@ -5,16 +5,24 @@ import io.ktor.http.auth.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
+import io.ktor.server.config.ApplicationConfig
 import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.plugins.csrf.*
 import io.ktor.server.plugins.doublereceive.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
 import io.ktor.server.sessions.*
+import io.ktor.utils.io.core.toByteArray
+import org.burgas.dao.IdentityEntity
+import org.burgas.database.DatabaseConnection
 import org.burgas.dto.AuthToken
 import org.burgas.dto.ExceptionResponse
+import org.jetbrains.exposed.v1.jdbc.transactions.suspendTransaction
+import java.util.*
 
 fun Application.configureSecurity() {
+
+    val config = ApplicationConfig("application.yaml")
 
     authentication {
 
@@ -25,16 +33,21 @@ fun Application.configureSecurity() {
             }
             verifier(JwtConfig.verifier)
             validate { credentials ->
-                if (!credentials["identityId"].isNullOrEmpty() && !credentials["authority"].isNullOrEmpty()) {
-                    JWTPrincipal(credentials.payload)
+                val identity = suspendTransaction(db = DatabaseConnection.postgres, readOnly = true) {
+                    IdentityEntity.findById(UUID.fromString(credentials["identityId"]))
+                }
+                if (identity != null && identity.status) {
+                    identity
                 } else {
                     null
                 }
             }
             challenge { defaultScheme, realm ->
                 call.sessions.clear(AuthToken::class)
-                call.respond(HttpStatusCode.Unauthorized,
-                    "JWT Token unavailable: $realm :: $defaultScheme")
+                call.respond(
+                    HttpStatusCode.Unauthorized,
+                    "JWT Token unavailable: $realm :: $defaultScheme"
+                )
             }
         }
     }
@@ -45,6 +58,9 @@ fun Application.configureSecurity() {
             cookie.httpOnly = true
             cookie.secure = false
             cookie.extensions["SameSite"] = "lax"
+            transform(SessionTransportTransformerMessageAuthentication(
+                config.property("cookie.secret").getString().toByteArray()
+            ))
         }
     }
 

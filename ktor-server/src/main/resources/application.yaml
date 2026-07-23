@@ -18,3 +18,6 @@ api:
 
 jwt:
   secret: '1a091b7f-21db-4ebe-8cec-d55b3836c7fc'
+
+cookie:
+  secret: '1u4i5ot06o4ir85n5m3m6970vjf3k58h'
