@@ -4,7 +4,6 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import org.burgas.database.Authority
-import org.burgas.serialization.UUIDSerializer
 import java.util.*
 
 interface Request {

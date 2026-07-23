@@ -19,6 +19,67 @@ Content-Type: application/json
 POST /api/v1/security/logout
 Host: localhost:9000
 
+
+
+### Identity Requests
+
+
+
 ###
-GET /api/v1/security/get-data
+GET /api/v1/identities
+Host: localhost:9000
+
+###
+GET /api/v1/identities/by-id?identityId=85197047-0962-4848-b46d-8c064879fe0b
+Host: localhost:9000
+
+###
+POST /api/v1/identities/create
+Host: localhost:9000
+Content-Type: application/json
+
+{
+    "email": "zagor@gmail.com",
+    "password": "zagor",
+    "phone": "+79456321587",
+    "firstname": "Загорулько",
+    "lastname": "Борис",
+    "patronymic": "Юрьевич"
+}
+
+###
+PUT /api/v1/identities/update
+Host: localhost:9000
+Content-Type: application/json
+
+{
+    "id": "1cd14eaa-518d-4cb6-ac0e-4326d36658e9",
+    "telegram": "@zagor",
+    "whatsapp": "@zagorulko",
+    "max": "@zagor-boris",
+    "about": "Личная информация профиля Загорулько Бориса Юрьевича"
+}
+
+###
+PUT /api/v1/identities/change-status
+Host: localhost:9000
+Content-Type: application/json
+
+{
+    "id": "1cd14eaa-518d-4cb6-ac0e-4326d36658e9",
+    "status": true
+}
+
+###
+PUT /api/v1/identities/change-password
+Host: localhost:9000
+Content-Type: application/json
+
+{
+    "id": "85197047-0962-4848-b46d-8c064879fe0b",
+    "password": "burgasvv"
+}
+
+###
+POST /api/v1/identities/delete?identityId=1cd14eaa-518d-4cb6-ac0e-4326d36658e9
 Host: localhost:9000

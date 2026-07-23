@@ -35,6 +35,8 @@ dependencies {
     implementation("com.zaxxer:HikariCP:7.1.0")
     implementation("org.mindrot:jbcrypt:0.4")
     implementation("io.ktor:ktor-server-auth-jwt:3.5.0")
+    implementation("io.insert-koin:koin-ktor:4.2.2")
+    implementation("io.insert-koin:koin-logger-slf4j:4.2.2")
 
     testImplementation(kotlin("test"))
     testImplementation(ktorLibs.server.testHost)

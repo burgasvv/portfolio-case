@@ -47,22 +47,24 @@ fun Application.configureSecurityRouter() {
         route("/api/v1/security") {
 
             post("/login") {
-                val authRequest = call.receive<AuthRequest>()
-                val identity = suspendTransaction(db = DatabaseConnection.postgres, readOnly = true) {
-                    IdentityEntity.find { IdentityTable.email eq authRequest.email }.singleOrNull()
-                }
-                if (
-                    identity != null && identity.status &&
-                    BCrypt.checkpw(authRequest.password, identity.password)
-                ) {
-                    val generateToken = JwtConfig.generateToken(identity.id.value, identity.authority)
-                    call.sessions.set(AuthToken(generateToken), AuthToken::class)
-                    call.respond(
-                        HttpStatusCode.OK,
-                        "You successfully logged in: ${identity.email} :: ${identity.authority}"
-                    )
+                val authToken = call.sessions.get(AuthToken::class)
+                if (authToken != null) {
+                    call.respond(HttpStatusCode.OK, "You already logged in")
                 } else {
-                    throw IllegalArgumentException("Identity not found for login")
+                    val authRequest = call.receive<AuthRequest>()
+                    suspendTransaction(db = DatabaseConnection.postgres, readOnly = true) {
+                        val identity = IdentityEntity.find { IdentityTable.email eq authRequest.email }.singleOrNull()
+                        if (
+                            identity != null && identity.status &&
+                            BCrypt.checkpw(authRequest.password, identity.password)
+                        ) {
+                            val generateToken = JwtConfig.generateToken(identity.id.value)
+                            call.sessions.set(AuthToken(generateToken), AuthToken::class)
+                            call.respond(HttpStatusCode.OK, identity.toResponse())
+                        } else {
+                            throw IllegalArgumentException("Identity not found for login")
+                        }
+                    }
                 }
             }
 
@@ -71,10 +73,6 @@ fun Application.configureSecurityRouter() {
                 post("/logout") {
                     call.sessions.clear(AuthToken::class)
                     call.respond(HttpStatusCode.OK, "You successfully logged out")
-                }
-
-                get("/get-data") {
-                    call.respond(HttpStatusCode.OK, "Get data from security endpoint")
                 }
             }
         }

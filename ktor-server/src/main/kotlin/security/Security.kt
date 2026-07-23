@@ -14,6 +14,7 @@ import io.ktor.server.response.*
 import io.ktor.server.sessions.*
 import io.ktor.utils.io.core.toByteArray
 import org.burgas.dao.IdentityEntity
+import org.burgas.database.Authority
 import org.burgas.database.DatabaseConnection
 import org.burgas.dto.AuthToken
 import org.burgas.dto.ExceptionResponse
@@ -43,7 +44,30 @@ fun Application.configureSecurity() {
                 }
             }
             challenge { defaultScheme, realm ->
-                call.sessions.clear(AuthToken::class)
+                call.respond(
+                    HttpStatusCode.Unauthorized,
+                    "JWT Token unavailable: $realm :: $defaultScheme"
+                )
+            }
+        }
+
+        jwt("jwt-auth-admin") {
+            authHeader { call ->
+                val authToken = call.sessions.get(AuthToken::class) ?: return@authHeader null
+                parseAuthorizationHeader("Bearer ${authToken.token}")
+            }
+            verifier(JwtConfig.verifier)
+            validate { credentials ->
+                val identity = suspendTransaction(db = DatabaseConnection.postgres, readOnly = true) {
+                    IdentityEntity.findById(UUID.fromString(credentials["identityId"]))
+                }
+                if (identity != null && identity.status && identity.authority == Authority.ADMIN) {
+                    identity
+                } else {
+                    null
+                }
+            }
+            challenge { defaultScheme, realm ->
                 call.respond(
                     HttpStatusCode.Unauthorized,
                     "JWT Token unavailable: $realm :: $defaultScheme"
