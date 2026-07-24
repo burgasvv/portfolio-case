@@ -15,7 +15,7 @@ class VideoService : ReadService<UUID, VideoEntity>, UploadService<VideoEntity>,
     override suspend fun readEntity(id: UUID): VideoEntity = suspendTransaction(
         db = DatabaseConnection.postgres, readOnly = true
     ) {
-        VideoEntity.findById(id)!!
+        VideoEntity[id]
     }
 
     override suspend fun upload(fileItem: PartData.FileItem): VideoEntity = suspendTransaction(

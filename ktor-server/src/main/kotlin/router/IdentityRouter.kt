@@ -6,6 +6,7 @@ import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.util.pipeline.PipelinePhase
 import org.burgas.dao.IdentityEntity
 import org.burgas.database.Authority
 import org.burgas.database.DatabaseConnection
@@ -19,74 +20,71 @@ fun Application.configureIdentityRouter() {
 
     val identityService by inject<IdentityService>()
 
-    intercept(ApplicationCallPipeline.Call) {
+    val identityAfterPluginsPhase = PipelinePhase("AfterPluginsPhase")
+
+    insertPhaseAfter(ApplicationCallPipeline.Plugins, identityAfterPluginsPhase)
+
+    intercept(identityAfterPluginsPhase) {
 
         if (call.request.path() == "/api/v1/identities/change-status") {
 
-            val identityPrincipal = (call.principal<IdentityEntity>()
-                ?: throw IllegalArgumentException("Not authenticated intercept identity principal by change status"))
-
+            val identityPrincipal = requireNotNull(call.principal<IdentityEntity>()) {
+                "Not authenticated intercept identity principal by change status"
+            }
             val identityEntity = suspendTransaction(db = DatabaseConnection.postgres, readOnly = true) {
-                IdentityEntity.findById(UUID.fromString(call.parameters["identityId"]))
-                    ?: throw IllegalArgumentException("Not found identity intercept by change status")
+                IdentityEntity[UUID.fromString(call.parameters["identityId"])]
             }
-            if (identityPrincipal.id.value != identityEntity.id.value) {
-                proceed()
-            } else {
-                throw IllegalArgumentException("Not authorized intercept identity by change status: Matched identities")
+            require(identityPrincipal.id.value != identityEntity.id.value) {
+                "Not authorized intercept identity by change status: Matched identities"
             }
+            proceed()
 
         } else if (call.request.path() == "/api/v1/identities/by-id" || call.request.path() == "/api/v1/identities/delete") {
 
-            val identityPrincipal = (call.principal<IdentityEntity>()
-                ?: throw IllegalArgumentException("Not authenticated intercept identity principal by id parameter"))
-
+            val identityPrincipal = requireNotNull(call.principal<IdentityEntity>()) {
+                "Not authenticated intercept identity principal by id parameter"
+            }
             when(identityPrincipal.authority) {
                 Authority.ADMIN -> proceed()
                 Authority.USER -> {
                     val identityEntity = suspendTransaction(db = DatabaseConnection.postgres, readOnly = true) {
-                        IdentityEntity.findById(UUID.fromString(call.parameters["identityId"]))
-                            ?: throw IllegalArgumentException("Not found identity intercept by id parameter")
+                        IdentityEntity[UUID.fromString(call.parameters["identityId"])]
                     }
-                    if (identityPrincipal.id.value == identityEntity.id.value) {
-                        proceed()
-                    } else {
-                        throw IllegalArgumentException("Not authorized intercept identity by id parameter")
+                    require(identityPrincipal.id.value == identityEntity.id.value) {
+                        "Not authorized intercept identity by id parameter"
                     }
+                    proceed()
                 }
             }
 
         } else if (
             call.request.path() == "/api/v1/identities/upload-image" || call.request.path() == "/api/v1/identities/remove-image"
         ) {
-            val identityPrincipal = (call.principal<IdentityEntity>()
-                ?: throw IllegalArgumentException("Not authenticated intercept identity principal image"))
-
+            val identityPrincipal = requireNotNull(call.principal<IdentityEntity>()) {
+                "Not authenticated intercept identity principal image"
+            }
             val identityEntity = suspendTransaction(db = DatabaseConnection.postgres, readOnly = true) {
-                IdentityEntity.findById(UUID.fromString(call.parameters["identityId"]))
-                    ?: throw IllegalArgumentException("Not found identity intercept image")
+                IdentityEntity[UUID.fromString(call.parameters["identityId"])]
             }
-            if (identityPrincipal.id.value == identityEntity.id.value) {
-                proceed()
-            } else {
-                throw IllegalArgumentException("Not authorized intercept identity image")
+            require(identityPrincipal.id.value == identityEntity.id.value) {
+                "Not authorized intercept identity by image"
             }
+            proceed()
 
         } else if (call.request.path() == "/api/v1/identities/update" || call.request.path() == "/api/v1/identities/change-password") {
 
-            val identityPrincipal = (call.principal<IdentityEntity>()
-                ?: throw IllegalArgumentException("Not authenticated intercept identity principal by identityRequest"))
+            val identityPrincipal = requireNotNull(call.principal<IdentityEntity>()) {
+                "Not authenticated intercept identity principal by identityRequest"
+            }
             val identityRequest = call.receive<IdentityRequest>()
 
             val identityEntity = suspendTransaction(db = DatabaseConnection.postgres, readOnly = true) {
-                IdentityEntity.findById(identityRequest.id!!)
-                    ?: throw IllegalArgumentException("Not found identity intercept by identityRequest")
+                IdentityEntity[identityRequest.id!!]
             }
-            if (identityPrincipal.id.value == identityEntity.id.value) {
-                proceed()
-            } else {
-                throw IllegalArgumentException("Not authorized intercept identity by identityRequest")
+            require(identityPrincipal.id.value == identityEntity.id.value) {
+                "Not authorized intercept identity by identityRequest"
             }
+            proceed()
 
         } else {
             proceed()

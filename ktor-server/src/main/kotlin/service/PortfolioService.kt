@@ -26,8 +26,7 @@ class PortfolioService : CollectService<PortfolioResponse>, ReadService<UUID, Po
     override suspend fun readEntity(id: UUID): PortfolioEntity = suspendTransaction(
         db = DatabaseConnection.postgres, readOnly = true
     ) {
-        PortfolioEntity.findById(id)!!
-            .load(PortfolioEntity::identity, PortfolioEntity::profession, PortfolioEntity::projects)
+        PortfolioEntity[id].load(PortfolioEntity::identity, PortfolioEntity::profession, PortfolioEntity::projects)
     }
 
     override suspend fun findById(id: UUID): PortfolioResponse = suspendTransaction(

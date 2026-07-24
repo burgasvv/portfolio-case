@@ -15,7 +15,7 @@ class DocumentService : ReadService<UUID, DocumentEntity>, UploadService<Documen
     override suspend fun readEntity(id: UUID): DocumentEntity = suspendTransaction(
         db = DatabaseConnection.postgres, readOnly = true
     ) {
-        DocumentEntity.findById(id)!!
+        DocumentEntity[id]
     }
 
     override suspend fun upload(fileItem: PartData.FileItem): DocumentEntity = suspendTransaction(

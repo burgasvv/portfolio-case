@@ -15,7 +15,7 @@ class ImageService : ReadService<UUID, ImageEntity>, UploadService<ImageEntity>,
     override suspend fun readEntity(id: UUID): ImageEntity = suspendTransaction(
         db = DatabaseConnection.postgres, readOnly = true
     ) {
-        ImageEntity.findById(id)!!
+        ImageEntity[id]
     }
 
     override suspend fun upload(fileItem: PartData.FileItem): ImageEntity = suspendTransaction(

@@ -192,6 +192,13 @@ data class PortfolioResponse(
 ) : Response
 
 @Serializable
+data class ProjectFileRequest(
+    @Contextual
+    val projectId: UUID,
+    val fileIds: List<@Contextual UUID>
+)
+
+@Serializable
 data class ProjectRequest(
     @Contextual
     override val id: UUID?,

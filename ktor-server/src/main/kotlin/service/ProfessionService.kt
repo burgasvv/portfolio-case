@@ -30,7 +30,7 @@ class ProfessionService : CollectService<ProfessionResponse>, ReadService<UUID, 
     override suspend fun readEntity(id: UUID): ProfessionEntity = suspendTransaction(
         db = DatabaseConnection.postgres, readOnly = true
     ) {
-        ProfessionEntity.findById(id)!!.load(ProfessionEntity::portfolios)
+        ProfessionEntity[id].load(ProfessionEntity::portfolios)
     }
 
     override suspend fun findById(id: UUID): ProfessionResponse = suspendTransaction(
@@ -66,7 +66,7 @@ class ProfessionService : CollectService<ProfessionResponse>, ReadService<UUID, 
         XSSFWorkbook(fileItem.provider().readBuffer.inputStream()).use { workbook ->
             workbook.getSheetAt(0).forEach { row ->
                 val professionRequest = ProfessionRequest(
-                    id = UUID.randomUUID(),
+                    id = null,
                     name = row.getCell(0)!!.stringCellValue,
                     description = row.getCell(1)!!.stringCellValue
                 )

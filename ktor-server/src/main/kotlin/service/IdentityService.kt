@@ -37,7 +37,7 @@ class IdentityService : CollectService<IdentityResponse>, ReadService<UUID, Iden
     override suspend fun readEntity(id: UUID): IdentityEntity = suspendTransaction(
         db = DatabaseConnection.postgres, readOnly = true
     ) {
-        IdentityEntity.findById(id)!!.load(IdentityEntity::image, IdentityEntity::portfolio)
+        IdentityEntity[id].load(IdentityEntity::image, IdentityEntity::portfolio)
     }
 
     override suspend fun findById(id: UUID): IdentityResponse = suspendTransaction(
@@ -103,23 +103,15 @@ class IdentityService : CollectService<IdentityResponse>, ReadService<UUID, Iden
         db = DatabaseConnection.postgres, transactionIsolation = Connection.TRANSACTION_READ_COMMITTED
     ) {
         val identityEntity = readEntity(identityId)
-        if (identityEntity.image == null) {
-            val fileItem = multiPartData.asFlow().filterIsInstance<PartData.FileItem>().first()
-            identityEntity.image = imageService.upload(fileItem)
-        } else {
-            throw IllegalArgumentException("Identity image already set")
-        }
+        require(identityEntity.image != null) { "Identity image already set" }
+        val fileItem = multiPartData.asFlow().filterIsInstance<PartData.FileItem>().first()
+        identityEntity.image = imageService.upload(fileItem)
     }
 
     suspend fun removeImage(identityId: UUID) = suspendTransaction(
         db = DatabaseConnection.postgres, transactionIsolation = Connection.TRANSACTION_READ_COMMITTED
     ) {
         val identityEntity = readEntity(identityId)
-        val imageEntity = identityEntity.image
-        if (imageEntity != null) {
-            imageEntity.delete()
-        } else {
-            throw IllegalArgumentException("Identity image is null for delete")
-        }
+        requireNotNull(identityEntity.image) { "Identity image is null for delete" }.delete()
     }
 }
