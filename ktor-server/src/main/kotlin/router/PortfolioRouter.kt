@@ -30,7 +30,7 @@ fun Application.configurePortfolioRouter() {
 
     val portfolioService by inject<PortfolioService>()
 
-    val portfolioAfterPluginsPhase = PipelinePhase("portfolioAfterPluginsPhase")
+    val portfolioAfterPluginsPhase = PipelinePhase("PortfolioAfterPluginsPhase")
 
     insertPhaseAfter(ApplicationCallPipeline.Plugins, portfolioAfterPluginsPhase)
 

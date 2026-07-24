@@ -20,7 +20,7 @@ fun Application.configureIdentityRouter() {
 
     val identityService by inject<IdentityService>()
 
-    val identityAfterPluginsPhase = PipelinePhase("AfterPluginsPhase")
+    val identityAfterPluginsPhase = PipelinePhase("IdentityAfterPluginsPhase")
 
     insertPhaseAfter(ApplicationCallPipeline.Plugins, identityAfterPluginsPhase)
 
