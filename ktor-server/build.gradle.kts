@@ -41,6 +41,8 @@ dependencies {
     implementation("io.ktor:ktor-server-swagger:3.5.0")
     implementation("io.ktor:ktor-server-routing-openapi:3.5.0")
     implementation("io.ktor:ktor-server-compression:3.5.0")
+    implementation("org.apache.poi:poi:5.5.1")
+    implementation("org.apache.poi:poi-ooxml:5.5.1")
 
     testImplementation(kotlin("test"))
     testImplementation(ktorLibs.server.testHost)

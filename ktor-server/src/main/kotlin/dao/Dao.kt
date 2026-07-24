@@ -147,28 +147,28 @@ class IdentityEntity(id: EntityID<UUID>) : UUIDEntity(id), Dao, Creator<Identity
     val portfolio by PortfolioEntity.optionalBackReferencedOn(PortfolioTable.identityId)
 
     override fun create(request: IdentityRequest) {
-        request.email!!.let { this.email = it }
-        request.password!!.let { this.password = BCrypt.hashpw(it, BCrypt.gensalt()) }
-        request.phone!!.let { this.phone = it }
-        request.telegram?.let { this.telegram = it }
-        request.whatsapp?.let { this.whatsapp = it }
-        request.max?.let { this.max = it }
-        request.firstname!!.let { this.firstname = it }
-        request.lastname!!.let { this.lastname = it }
-        request.patronymic!!.let { this.patronymic = it }
-        request.about?.let { this.about = it }
+        request.email.takeUnless { it.isNullOrEmpty() }!!.let { this.email = it }
+        request.password.takeUnless { it.isNullOrEmpty() }!!.let { this.password = BCrypt.hashpw(it, BCrypt.gensalt()) }
+        request.phone.takeUnless { it.isNullOrEmpty() }!!.let { this.phone = it }
+        request.telegram.takeUnless { it.isNullOrEmpty() }?.let { this.telegram = it }
+        request.whatsapp.takeUnless { it.isNullOrEmpty() }?.let { this.whatsapp = it }
+        request.max.takeUnless { it.isNullOrEmpty() }?.let { this.max = it }
+        request.firstname.takeUnless { it.isNullOrEmpty() }!!.let { this.firstname = it }
+        request.lastname.takeUnless { it.isNullOrEmpty() }!!.let { this.lastname = it }
+        request.patronymic.takeUnless { it.isNullOrEmpty() }!!.let { this.patronymic = it }
+        request.about.takeUnless { it.isNullOrEmpty() }?.let { this.about = it }
     }
 
     override fun update(request: IdentityRequest) {
-        request.email?.let { this.email = it }
-        request.phone?.let { this.phone = it }
-        request.telegram?.let { this.telegram = it }
-        request.whatsapp?.let { this.whatsapp = it }
-        request.max?.let { this.max = it }
-        request.firstname?.let { this.firstname = it }
-        request.lastname?.let { this.lastname = it }
-        request.patronymic?.let { this.patronymic = it }
-        request.about?.let { this.about = it }
+        request.email.takeUnless { it.isNullOrEmpty() }?.let { this.email = it }
+        request.phone.takeUnless { it.isNullOrEmpty() }?.let { this.phone = it }
+        request.telegram.takeUnless { it.isNullOrEmpty() }?.let { this.telegram = it }
+        request.whatsapp.takeUnless { it.isNullOrEmpty() }?.let { this.whatsapp = it }
+        request.max.takeUnless { it.isNullOrEmpty() }?.let { this.max = it }
+        request.firstname.takeUnless { it.isNullOrEmpty() }?.let { this.firstname = it }
+        request.lastname.takeUnless { it.isNullOrEmpty() }?.let { this.lastname = it }
+        request.patronymic.takeUnless { it.isNullOrEmpty() }?.let { this.patronymic = it }
+        request.about.takeUnless { it.isNullOrEmpty() }?.let { this.about = it }
     }
 
     override suspend fun toDependency(): IdentityDependency {
@@ -218,13 +218,13 @@ class ProfessionEntity(id: EntityID<UUID>) : UUIDEntity(id), Dao, Creator<Profes
     val portfolios by PortfolioEntity.optionalReferrersOn(PortfolioTable.professionId)
 
     override fun create(request: ProfessionRequest) {
-        request.name!!.let { this.name = it }
-        request.description!!.let { this.description = it }
+        request.name.takeUnless { it.isNullOrEmpty() }!!.let { this.name = it }
+        request.description.takeUnless { it.isNullOrEmpty() }!!.let { this.description = it }
     }
 
     override fun update(request: ProfessionRequest) {
-        request.name?.let { this.name = it }
-        request.description?.let { this.description = it }
+        request.name.takeUnless { it.isNullOrEmpty() }?.let { this.name = it }
+        request.description.takeUnless { it.isNullOrEmpty() }?.let { this.description = it }
     }
 
     override suspend fun toDependency(): ProfessionDependency {
@@ -258,12 +258,12 @@ class PortfolioEntity(id: EntityID<UUID>) : UUIDEntity(id), Dao, Creator<Portfol
     override fun create(request: PortfolioRequest) {
         request.professionId!!.let { this.profession = ProfessionEntity.findById(it)!! }
         request.identityId!!.let { this.identity = IdentityEntity.findById(it)!! }
-        request.description?.let { this.description = it }
+        request.description.takeUnless { it.isNullOrEmpty() }?.let { this.description = it }
     }
 
     override fun update(request: PortfolioRequest) {
         request.professionId?.let { this.profession = ProfessionEntity.findById(it)!! }
-        request.description?.let { this.description = it }
+        request.description.takeUnless { it.isNullOrEmpty() }?.let { this.description = it }
     }
 
     suspend fun toPortfolioDependencyInIdentity(): PortfolioDependencyInIdentity {
@@ -320,16 +320,16 @@ class ProjectEntity(id: EntityID<UUID>) : UUIDEntity(id), Dao, Creator<ProjectRe
     var documents by DocumentEntity.via(ProjectDocumentTable.projectId, ProjectDocumentTable.documentId)
 
     override fun create(request: ProjectRequest) {
-        request.name!!.let { this.name = it }
-        request.description?.let { this.description = it }
+        request.name.takeUnless { it.isNullOrEmpty() }!!.let { this.name = it }
+        request.description.takeUnless { it.isNullOrEmpty() }?.let { this.description = it }
         request.portfolioId!!.let { this.portfolio = PortfolioEntity.findById(it)!! }
-        request.link?.let { this.link = it }
+        request.link.takeUnless { it.isNullOrEmpty() }?.let { this.link = it }
     }
 
     override fun update(request: ProjectRequest) {
-        request.name?.let { this.name = it }
-        request.description?.let { this.description = it }
-        request.link?.let { this.link = it }
+        request.name.takeUnless { it.isNullOrEmpty() }?.let { this.name = it }
+        request.description.takeUnless { it.isNullOrEmpty() }?.let { this.description = it }
+        request.link.takeUnless { it.isNullOrEmpty() }?.let { this.link = it }
     }
 
     override suspend fun toDependency(): ProjectDependency {

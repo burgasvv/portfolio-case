@@ -30,7 +30,7 @@ GET /api/v1/identities
 Host: localhost:9000
 
 ###
-GET /api/v1/identities/by-id?identityId=85197047-0962-4848-b46d-8c064879fe0b
+GET /api/v1/identities/by-id?identityId=4530f5f3-a237-4353-9e1f-25bcbccfdc88
 Host: localhost:9000
 
 ###
@@ -53,7 +53,7 @@ Host: localhost:9000
 Content-Type: application/json
 
 {
-    "id": "1cd14eaa-518d-4cb6-ac0e-4326d36658e9",
+    "id": "4530f5f3-a237-4353-9e1f-25bcbccfdc88",
     "telegram": "@zagor",
     "whatsapp": "@zagorulko",
     "max": "@zagor-boris",
@@ -81,5 +81,43 @@ Content-Type: application/json
 }
 
 ###
-POST /api/v1/identities/delete?identityId=1cd14eaa-518d-4cb6-ac0e-4326d36658e9
+POST /api/v1/identities/delete?identityId=d2577048-5447-49d3-b3d4-242365788571
+Host: localhost:9000
+
+
+
+### Profession Requests
+
+
+
+###
+GET /api/v1/professions
+Host: localhost:9000
+
+###
+GET /api/v1/professions/by-id?professionId=42522c7f-3d7f-4237-a287-d84a9fc5e99c
+Host: localhost:9000
+
+###
+POST /api/v1/professions/create
+Host: localhost:9000
+Content-Type: application/json
+
+{
+    "name": "Java разработчик",
+    "description": "IT-специалист, который создает, тестирует и поддерживает программное обеспечение на языке программирования Java."
+}
+
+###
+PUT /api/v1/professions/update
+Host: localhost:9000
+Content-Type: application/json
+
+{
+    "id": "42522c7f-3d7f-4237-a287-d84a9fc5e99c",
+    "name": "Java разработчик/developer"
+}
+
+###
+DELETE /api/v1/professions/delete?professionId=42522c7f-3d7f-4237-a287-d84a9fc5e99c
 Host: localhost:9000

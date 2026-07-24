@@ -25,9 +25,7 @@ fun Application.configureSerialization() {
                 ignoreUnknownKeys = true
                 isLenient = true
                 useArrayPolymorphism = true
-                serializersModule = SerializersModule {
-                    contextual(UUID::class, UUIDSerializer)
-                }
+                serializersModule = SerializersModule { contextual(UUID::class, UUIDSerializer) }
             }
         )
     }
