@@ -30,7 +30,7 @@ GET /api/v1/identities
 Host: localhost:9000
 
 ###
-GET /api/v1/identities/by-id?identityId=4530f5f3-a237-4353-9e1f-25bcbccfdc88
+GET /api/v1/identities/by-id?identityId=85197047-0962-4848-b46d-8c064879fe0b
 Host: localhost:9000
 
 ###
@@ -121,3 +121,37 @@ Content-Type: application/json
 ###
 DELETE /api/v1/professions/delete?professionId=42522c7f-3d7f-4237-a287-d84a9fc5e99c
 Host: localhost:9000
+
+
+
+### Portfolio Requests
+
+
+
+###
+GET /api/v1/portfolios
+Host: localhost:9000
+
+###
+GET /api/v1/portfolios/by-id?portfolioId=860b79cf-df62-4e83-af56-a87906be68f2
+Host: localhost:9000
+
+###
+POST /api/v1/portfolios/create
+Host: localhost:9000
+Content-Type: application/json
+
+{
+    "professionId": "1d86c554-7c86-4f62-988c-882377ce6f67",
+    "identityId": "85197047-0962-4848-b46d-8c064879fe0b"
+}
+
+###
+PUT /api/v1/portfolios/update
+Host: localhost:9000
+Content-Type: application/json
+
+{
+    "id": "860b79cf-df62-4e83-af56-a87906be68f2",
+    "description": "Эффектное описание профиля Kotlin-разработчика в портфолио должно включать краткое сильное «био»."
+}

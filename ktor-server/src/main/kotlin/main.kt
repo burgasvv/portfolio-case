@@ -26,4 +26,5 @@ suspend fun Application.modules() {
     configureDocumentRouter()
     configureIdentityRouter()
     configureProfessionRouter()
+    configurePortfolioRouter()
 }

@@ -4,6 +4,7 @@ import io.ktor.server.application.*
 import org.burgas.service.DocumentService
 import org.burgas.service.IdentityService
 import org.burgas.service.ImageService
+import org.burgas.service.PortfolioService
 import org.burgas.service.ProfessionService
 import org.burgas.service.VideoService
 import org.koin.core.module.dsl.singleOf
@@ -19,6 +20,7 @@ fun Application.configureKoin() {
         singleOf(::DocumentService)
         single { IdentityService(imageService = get<ImageService>()) }
         singleOf(::ProfessionService)
+        singleOf(::PortfolioService)
     }
 
     install(Koin) {
