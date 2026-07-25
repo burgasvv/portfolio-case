@@ -1,21 +1,11 @@
 package org.burgas.router
 
-import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.Application
-import io.ktor.server.application.ApplicationCallPipeline
-import io.ktor.server.application.call
-import io.ktor.server.auth.authenticate
-import io.ktor.server.auth.principal
-import io.ktor.server.request.path
-import io.ktor.server.request.receive
-import io.ktor.server.response.respond
-import io.ktor.server.routing.delete
-import io.ktor.server.routing.get
-import io.ktor.server.routing.post
-import io.ktor.server.routing.put
-import io.ktor.server.routing.route
-import io.ktor.server.routing.routing
-import io.ktor.util.pipeline.PipelinePhase
+import io.ktor.http.*
+import io.ktor.server.application.*
+import io.ktor.server.auth.*
+import io.ktor.server.request.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 import org.burgas.dao.IdentityEntity
 import org.burgas.dao.PortfolioEntity
 import org.burgas.database.DatabaseConnection
@@ -24,67 +14,66 @@ import org.burgas.service.PortfolioService
 import org.jetbrains.exposed.v1.dao.load
 import org.jetbrains.exposed.v1.jdbc.transactions.suspendTransaction
 import org.koin.ktor.ext.inject
-import java.util.UUID
+import java.util.*
 
 fun Application.configurePortfolioRouter() {
 
     val portfolioService by inject<PortfolioService>()
 
-    val afterPluginsPhase = PipelinePhase("PortfolioInterceptAfterPluginsPhase")
+    val portfolioInterceptPlugin = createRouteScopedPlugin("PortfolioInterceptPlugin") {
+        on(AuthenticationChecked) { call ->
 
-    insertPhaseAfter(ApplicationCallPipeline.Plugins, afterPluginsPhase)
+            when(call.request.path()) {
 
-    intercept(afterPluginsPhase) {
-
-        when(call.request.path()) {
-            "/api/v1/portfolios/create" -> {
-                val identityPrincipal = requireNotNull(call.principal<IdentityEntity>()) {
-                    "Not authenticated intercept portfolio on create"
-                }
-                val portfolioRequest = call.receive<PortfolioRequest>()
-
-                val identityEntity = suspendTransaction(db = DatabaseConnection.postgres, readOnly = true) {
-                    IdentityEntity[portfolioRequest.identityId!!]
-                }
-                require(identityPrincipal.id.value == identityEntity.id.value) {
-                    "Not authorized intercept portfolio on create"
-                }
-                proceed()
-            }
-            "/api/v1/portfolios/update" -> {
-                val identityPrincipal = requireNotNull(call.principal<IdentityEntity>()) {
-                    "Not authenticated intercept portfolio on update"
-                }
-                val portfolioRequest = call.receive<PortfolioRequest>()
-
-                suspendTransaction(db = DatabaseConnection.postgres, readOnly = true) {
-                    val portfolioEntity = PortfolioEntity[portfolioRequest.id!!].load(PortfolioEntity::identity)
-
-                    require(identityPrincipal.id.value == portfolioEntity.identity.id.value) {
-                        "Not authorized intercept portfolio on update"
+                "/api/v1/portfolios/create" -> {
+                    val identityPrincipal = requireNotNull(call.principal<IdentityEntity>()) {
+                        "Not authenticated intercept portfolio on create"
                     }
-                    proceed()
-                }
-            }
-            "/api/v1/portfolios/delete" -> {
-                val identityPrincipal = requireNotNull(call.principal<IdentityEntity>()) {
-                    "Not authenticated intercept portfolio on delete"
-                }
-                suspendTransaction(db = DatabaseConnection.postgres, readOnly = true) {
-                    val portfolioEntity = PortfolioEntity[UUID.fromString(call.parameters["portfolioId"])]
-                        .load(PortfolioEntity::identity)
+                    val portfolioRequest = call.receive<PortfolioRequest>()
 
-                    require(identityPrincipal.id.value == portfolioEntity.identity.id.value) {
-                        "Not authorized intercept portfolio on delete"
+                    val identityEntity = suspendTransaction(db = DatabaseConnection.postgres, readOnly = true) {
+                        IdentityEntity[portfolioRequest.identityId!!]
                     }
-                    proceed()
+                    require(identityPrincipal.id == identityEntity.id) {
+                        "Not authorized intercept portfolio on create"
+                    }
+                }
+
+                "/api/v1/portfolios/update" -> {
+                    val identityPrincipal = requireNotNull(call.principal<IdentityEntity>()) {
+                        "Not authenticated intercept portfolio on update"
+                    }
+                    val portfolioRequest = call.receive<PortfolioRequest>()
+
+                    suspendTransaction(db = DatabaseConnection.postgres, readOnly = true) {
+                        val portfolioEntity = PortfolioEntity[portfolioRequest.id!!].load(PortfolioEntity::identity)
+
+                        require(identityPrincipal.id == portfolioEntity.identity.id) {
+                            "Not authorized intercept portfolio on update"
+                        }
+                    }
+                }
+
+                "/api/v1/portfolios/delete" -> {
+                    val identityPrincipal = requireNotNull(call.principal<IdentityEntity>()) {
+                        "Not authenticated intercept portfolio on delete"
+                    }
+                    suspendTransaction(db = DatabaseConnection.postgres, readOnly = true) {
+                        val portfolioEntity = PortfolioEntity[UUID.fromString(call.parameters["portfolioId"])]
+                            .load(PortfolioEntity::identity)
+
+                        require(identityPrincipal.id == portfolioEntity.identity.id) {
+                            "Not authorized intercept portfolio on delete"
+                        }
+                    }
                 }
             }
-            else -> proceed()
         }
     }
 
     routing {
+
+        install(portfolioInterceptPlugin)
 
         route("/api/v1/portfolios") {
 

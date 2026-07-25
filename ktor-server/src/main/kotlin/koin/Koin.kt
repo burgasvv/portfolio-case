@@ -16,6 +16,13 @@ fun Application.configureKoin() {
         single { IdentityService(imageService = get<ImageService>()) }
         singleOf(::ProfessionService)
         singleOf(::PortfolioService)
+        single {
+            ProjectService(
+                imageService = get<ImageService>(),
+                videoService = get<VideoService>(),
+                documentService = get<DocumentService>()
+            )
+        }
     }
 
     install(Koin) {

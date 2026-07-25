@@ -6,7 +6,6 @@ import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import io.ktor.util.pipeline.PipelinePhase
 import org.burgas.dao.IdentityEntity
 import org.burgas.database.Authority
 import org.burgas.database.DatabaseConnection
@@ -20,73 +19,72 @@ fun Application.configureIdentityRouter() {
 
     val identityService by inject<IdentityService>()
 
-    val afterPluginsPhase = PipelinePhase("IdentityInterceptAfterPluginsPhase")
+    val identityInterceptPlugin = createRouteScopedPlugin(name = "IdentityInterceptPlugin") {
+        on(AuthenticationChecked) { call ->
 
-    insertPhaseAfter(ApplicationCallPipeline.Plugins, afterPluginsPhase)
+            when (call.request.path()) {
 
-    intercept(afterPluginsPhase) {
+                "/api/v1/identities/change-status" -> {
+                    val identityPrincipal = requireNotNull(call.principal<IdentityEntity>()) {
+                        "Not authenticated intercept identity principal by change status"
+                    }
+                    val identityEntity = suspendTransaction(db = DatabaseConnection.postgres, readOnly = true) {
+                        IdentityEntity[UUID.fromString(call.parameters["identityId"])]
+                    }
+                    require(identityPrincipal.id != identityEntity.id) {
+                        "Not authorized intercept identity by change status: Matched identities"
+                    }
+                }
 
-        when(call.request.path()) {
-            "/api/v1/identities/change-status" -> {
-                val identityPrincipal = requireNotNull(call.principal<IdentityEntity>()) {
-                    "Not authenticated intercept identity principal by change status"
-                }
-                val identityEntity = suspendTransaction(db = DatabaseConnection.postgres, readOnly = true) {
-                    IdentityEntity[UUID.fromString(call.parameters["identityId"])]
-                }
-                require(identityPrincipal.id.value != identityEntity.id.value) {
-                    "Not authorized intercept identity by change status: Matched identities"
-                }
-                proceed()
-            }
-            "/api/v1/identities/by-id", "/api/v1/identities/delete" -> {
-                val identityPrincipal = requireNotNull(call.principal<IdentityEntity>()) {
-                    "Not authenticated intercept identity principal by id parameter"
-                }
-                when(identityPrincipal.authority) {
-                    Authority.ADMIN -> proceed()
-                    Authority.USER -> {
-                        val identityEntity = suspendTransaction(db = DatabaseConnection.postgres, readOnly = true) {
-                            IdentityEntity[UUID.fromString(call.parameters["identityId"])]
+                "/api/v1/identities/by-id", "/api/v1/identities/delete" -> {
+                    val identityPrincipal = requireNotNull(call.principal<IdentityEntity>()) {
+                        "Not authenticated intercept identity principal by id parameter"
+                    }
+                    when (identityPrincipal.authority) {
+                        Authority.ADMIN -> { return@on }
+                        Authority.USER -> {
+                            val identityEntity = suspendTransaction(db = DatabaseConnection.postgres, readOnly = true) {
+                                IdentityEntity[UUID.fromString(call.parameters["identityId"])]
+                            }
+                            require(identityPrincipal.id == identityEntity.id) {
+                                "Not authorized intercept identity by id parameter"
+                            }
                         }
-                        require(identityPrincipal.id.value == identityEntity.id.value) {
-                            "Not authorized intercept identity by id parameter"
-                        }
-                        proceed()
+                    }
+                }
+
+                "/api/v1/identities/upload-image", "/api/v1/identities/remove-image" -> {
+                    val identityPrincipal = requireNotNull(call.principal<IdentityEntity>()) {
+                        "Not authenticated intercept identity principal image"
+                    }
+                    val identityEntity = suspendTransaction(db = DatabaseConnection.postgres, readOnly = true) {
+                        IdentityEntity[UUID.fromString(call.parameters["identityId"])]
+                    }
+                    require(identityPrincipal.id == identityEntity.id) {
+                        "Not authorized intercept identity by image"
+                    }
+                }
+
+                "/api/v1/identities/update", "/api/v1/identities/change-password" -> {
+                    val identityPrincipal = requireNotNull(call.principal<IdentityEntity>()) {
+                        "Not authenticated intercept identity principal by identityRequest"
+                    }
+                    val identityRequest = call.receive<IdentityRequest>()
+
+                    val identityEntity = suspendTransaction(db = DatabaseConnection.postgres, readOnly = true) {
+                        IdentityEntity[identityRequest.id!!]
+                    }
+                    require(identityPrincipal.id == identityEntity.id) {
+                        "Not authorized intercept identity by identityRequest"
                     }
                 }
             }
-            "/api/v1/identities/upload-image", "/api/v1/identities/remove-image" -> {
-                val identityPrincipal = requireNotNull(call.principal<IdentityEntity>()) {
-                    "Not authenticated intercept identity principal image"
-                }
-                val identityEntity = suspendTransaction(db = DatabaseConnection.postgres, readOnly = true) {
-                    IdentityEntity[UUID.fromString(call.parameters["identityId"])]
-                }
-                require(identityPrincipal.id.value == identityEntity.id.value) {
-                    "Not authorized intercept identity by image"
-                }
-                proceed()
-            }
-            "/api/v1/identities/update", "/api/v1/identities/change-password" -> {
-                val identityPrincipal = requireNotNull(call.principal<IdentityEntity>()) {
-                    "Not authenticated intercept identity principal by identityRequest"
-                }
-                val identityRequest = call.receive<IdentityRequest>()
-
-                val identityEntity = suspendTransaction(db = DatabaseConnection.postgres, readOnly = true) {
-                    IdentityEntity[identityRequest.id!!]
-                }
-                require(identityPrincipal.id.value == identityEntity.id.value) {
-                    "Not authorized intercept identity by identityRequest"
-                }
-                proceed()
-            }
-            else -> proceed()
         }
     }
 
     routing {
+
+        install(identityInterceptPlugin)
 
         route("/api/v1/identities") {
 

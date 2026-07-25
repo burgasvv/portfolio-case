@@ -11,8 +11,8 @@ Host: localhost:9000
 Content-Type: application/json
 
 {
-    "email": "zagor@gmail.com",
-    "password": "zagor"
+    "email": "burgasvv@gmail.com",
+    "password": "burgasvv"
 }
 
 ###
@@ -154,4 +154,56 @@ Content-Type: application/json
 {
     "id": "860b79cf-df62-4e83-af56-a87906be68f2",
     "description": "Эффектное описание профиля Kotlin-разработчика в портфолио должно включать краткое сильное «био»."
+}
+
+
+
+### Projects Request
+
+
+
+###
+GET /api/v1/projects/by-id?projectId=7783b29b-24e7-4816-b024-fb4725d8682d
+Host: localhost:9000
+
+###
+POST /api/v1/projects/create
+Host: localhost:9000
+Content-Type: application/json
+
+{
+    "name": "portfolio-case",
+    "description": "Cтруктурированная история о том, как специалист или команда решили конкретную бизнес-задачу клиента.",
+    "portfolioId": "860b79cf-df62-4e83-af56-a87906be68f2",
+    "link": "https://github.com/burgasvv/portfolio-case.git"
+}
+
+###
+PUT /api/v1/projects/update
+Host: localhost:9000
+Content-Type: application/json
+
+{
+    "id": "7783b29b-24e7-4816-b024-fb4725d8682d",
+    "name": "Portfolio Case"
+}
+
+###
+DELETE /api/v1/projects/remove-videos
+Host: localhost:9000
+Content-Type: application/json
+
+{
+    "projectId": "7783b29b-24e7-4816-b024-fb4725d8682d",
+    "fileIds": ["35a87941-161c-4130-9706-5e3f1799c3c1"]
+}
+
+###
+DELETE /api/v1/projects/remove-documents
+Host: localhost:9000
+Content-Type: application/json
+
+{
+    "projectId": "7783b29b-24e7-4816-b024-fb4725d8682d",
+    "fileIds": ["91d35703-478b-48a4-b1d9-4fa58548e092"]
 }

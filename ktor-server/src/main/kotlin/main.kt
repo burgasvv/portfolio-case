@@ -27,4 +27,5 @@ suspend fun Application.modules() {
     configureIdentityRouter()
     configureProfessionRouter()
     configurePortfolioRouter()
+    configureProjectRouter()
 }
