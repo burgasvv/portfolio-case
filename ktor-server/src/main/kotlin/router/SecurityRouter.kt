@@ -24,21 +24,21 @@ import java.util.*
 fun Application.configureSecurityRouter() {
 
     val config = ApplicationConfig("application.yaml")
-    val methods: List<HttpMethod> = listOf(
-        HttpMethod.Post, HttpMethod.Delete, HttpMethod.Patch, HttpMethod.Put
-    )
 
     intercept(ApplicationCallPipeline.Setup) {
-        if (methods.contains(call.request.httpMethod)) {
-            call.request.setHeader(
-                HttpHeaders.Origin,
-                listOf(config.property("api.ktor-server.url").getString())
-            )
-            call.request.setHeader(
-                "X-CSRF-Token", listOf(UUID.randomUUID().toString())
-            )
-        } else {
-            proceed()
+
+        when(call.request.httpMethod) {
+            HttpMethod.Post, HttpMethod.Delete, HttpMethod.Patch, HttpMethod.Put -> {
+                call.request.setHeader(
+                    HttpHeaders.Origin,
+                    listOf(config.property("api.ktor-server.url").getString())
+                )
+                call.request.setHeader(
+                    "X-CSRF-Token", listOf(UUID.randomUUID().toString())
+                )
+                proceed()
+            }
+            else -> proceed()
         }
     }
 

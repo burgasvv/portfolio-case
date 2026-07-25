@@ -30,60 +30,57 @@ fun Application.configurePortfolioRouter() {
 
     val portfolioService by inject<PortfolioService>()
 
-    val portfolioAfterPluginsPhase = PipelinePhase("PortfolioAfterPluginsPhase")
+    val afterPluginsPhase = PipelinePhase("PortfolioInterceptAfterPluginsPhase")
 
-    insertPhaseAfter(ApplicationCallPipeline.Plugins, portfolioAfterPluginsPhase)
+    insertPhaseAfter(ApplicationCallPipeline.Plugins, afterPluginsPhase)
 
-    intercept(portfolioAfterPluginsPhase) {
+    intercept(afterPluginsPhase) {
 
-        if (call.request.path() == "/api/v1/portfolios/create") {
+        when(call.request.path()) {
+            "/api/v1/portfolios/create" -> {
+                val identityPrincipal = requireNotNull(call.principal<IdentityEntity>()) {
+                    "Not authenticated intercept portfolio on create"
+                }
+                val portfolioRequest = call.receive<PortfolioRequest>()
 
-            val identityPrincipal = requireNotNull(call.principal<IdentityEntity>()) {
-                "Not authenticated intercept portfolio on create"
-            }
-            val portfolioRequest = call.receive<PortfolioRequest>()
-
-            val identityEntity = suspendTransaction(db = DatabaseConnection.postgres, readOnly = true) {
-                IdentityEntity[portfolioRequest.identityId!!]
-            }
-            require(identityPrincipal.id.value == identityEntity.id.value) {
-                "Not authorized intercept portfolio on create"
-            }
-            proceed()
-
-        } else if (call.request.path() == "/api/v1/portfolios/update") {
-
-            val identityPrincipal = requireNotNull(call.principal<IdentityEntity>()) {
-                "Not authenticated intercept portfolio on update"
-            }
-            val portfolioRequest = call.receive<PortfolioRequest>()
-
-            suspendTransaction(db = DatabaseConnection.postgres, readOnly = true) {
-                val portfolioEntity = PortfolioEntity[portfolioRequest.id!!].load(PortfolioEntity::identity)
-
-                require(identityPrincipal.id.value == portfolioEntity.identity.id.value) {
-                    "Not authorized intercept portfolio on update"
+                val identityEntity = suspendTransaction(db = DatabaseConnection.postgres, readOnly = true) {
+                    IdentityEntity[portfolioRequest.identityId!!]
+                }
+                require(identityPrincipal.id.value == identityEntity.id.value) {
+                    "Not authorized intercept portfolio on create"
                 }
                 proceed()
             }
-
-        } else if (call.request.path() == "/api/v1/portfolios/delete") {
-
-            val identityPrincipal = requireNotNull(call.principal<IdentityEntity>()) {
-                "Not authenticated intercept portfolio on delete"
-            }
-            suspendTransaction(db = DatabaseConnection.postgres, readOnly = true) {
-                val portfolioEntity = PortfolioEntity[UUID.fromString(call.parameters["portfolioId"])]
-                    .load(PortfolioEntity::identity)
-
-                require(identityPrincipal.id.value == portfolioEntity.identity.id.value) {
-                    "Not authorized intercept portfolio on delete"
+            "/api/v1/portfolios/update" -> {
+                val identityPrincipal = requireNotNull(call.principal<IdentityEntity>()) {
+                    "Not authenticated intercept portfolio on update"
                 }
-                proceed()
-            }
+                val portfolioRequest = call.receive<PortfolioRequest>()
 
-        } else {
-            proceed()
+                suspendTransaction(db = DatabaseConnection.postgres, readOnly = true) {
+                    val portfolioEntity = PortfolioEntity[portfolioRequest.id!!].load(PortfolioEntity::identity)
+
+                    require(identityPrincipal.id.value == portfolioEntity.identity.id.value) {
+                        "Not authorized intercept portfolio on update"
+                    }
+                    proceed()
+                }
+            }
+            "/api/v1/portfolios/delete" -> {
+                val identityPrincipal = requireNotNull(call.principal<IdentityEntity>()) {
+                    "Not authenticated intercept portfolio on delete"
+                }
+                suspendTransaction(db = DatabaseConnection.postgres, readOnly = true) {
+                    val portfolioEntity = PortfolioEntity[UUID.fromString(call.parameters["portfolioId"])]
+                        .load(PortfolioEntity::identity)
+
+                    require(identityPrincipal.id.value == portfolioEntity.identity.id.value) {
+                        "Not authorized intercept portfolio on delete"
+                    }
+                    proceed()
+                }
+            }
+            else -> proceed()
         }
     }
 
