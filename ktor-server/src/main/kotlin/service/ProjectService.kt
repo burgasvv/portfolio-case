@@ -6,11 +6,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
 import org.burgas.dao.ProjectEntity
-import org.burgas.database.DatabaseConnection
-import org.burgas.database.DocumentTable
-import org.burgas.database.ProjectDocumentTable
-import org.burgas.database.ProjectVideoTable
-import org.burgas.database.VideoTable
+import org.burgas.database.*
 import org.burgas.dto.ProjectFileRequest
 import org.burgas.dto.ProjectRequest
 import org.burgas.dto.ProjectResponse
@@ -19,7 +15,6 @@ import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.inList
 import org.jetbrains.exposed.v1.dao.load
 import org.jetbrains.exposed.v1.jdbc.SizedCollection
-import org.jetbrains.exposed.v1.jdbc.batchInsert
 import org.jetbrains.exposed.v1.jdbc.deleteWhere
 import org.jetbrains.exposed.v1.jdbc.transactions.suspendTransaction
 import java.sql.Connection
