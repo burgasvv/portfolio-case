@@ -238,13 +238,10 @@ paths:
             schema:
               type: object
               properties:
-                description:
-                  type: string
-                  description: Описание файла
                 file:
                   type: string
                   format: binary
-                  description: Сам файл для загрузки
+                  description: Файл для загрузки в формате image
       responses:
         "200":
           description: "OK"
@@ -323,13 +320,10 @@ paths:
             schema:
               type: object
               properties:
-                description:
-                  type: string
-                  description: Описание файла
                 file:
                   type: string
                   format: binary
-                  description: Сам файл для загрузки
+                  description: Файл для загрузки в формате xlss Excel
       responses:
         "302":
           description: "Found <br> Redirect"
@@ -576,15 +570,12 @@ paths:
             schema:
               type: object
               properties:
-                comment:
-                  type: string
-                  description: Комментарий к загрузке
                 files:
                   type: array
                   items:
                     type: string
                     format: binary
-                  description: Список файлов для отправки
+                  description: Список файлов-документов для отправки в формате application
       responses:
         "200":
           description: "OK"
@@ -614,7 +605,7 @@ paths:
                 file:
                   type: string
                   format: binary
-                  description: Сам файл для загрузки
+                  description: Файл для загрузки image
       responses:
         "200":
           description: "OK"
@@ -646,7 +637,7 @@ paths:
                   items:
                     type: string
                     format: binary
-                  description: Список файлов для отправки
+                  description: Список файлов-видео для отправки video
       responses:
         "200":
           description: "OK"
