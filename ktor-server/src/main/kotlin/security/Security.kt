@@ -5,14 +5,14 @@ import io.ktor.http.auth.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
-import io.ktor.server.config.ApplicationConfig
+import io.ktor.server.config.*
 import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.plugins.csrf.*
 import io.ktor.server.plugins.doublereceive.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
 import io.ktor.server.sessions.*
-import io.ktor.utils.io.core.toByteArray
+import io.ktor.utils.io.core.*
 import org.burgas.dao.IdentityEntity
 import org.burgas.database.Authority
 import org.burgas.database.DatabaseConnection
@@ -79,7 +79,7 @@ fun Application.configureSecurity() {
     install(Sessions) {
         cookie<AuthToken>("AUTH_TOKEN") {
             cookie.path = "/"
-            cookie.httpOnly = true
+            cookie.httpOnly = false
             cookie.secure = false
             cookie.extensions["SameSite"] = "lax"
             transform(SessionTransportTransformerMessageAuthentication(

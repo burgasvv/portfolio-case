@@ -70,6 +70,15 @@ fun Application.configureSecurityRouter() {
 
             authenticate("jwt-auth") {
 
+                get("/authenticated") {
+                    val identityEntity = requireNotNull(call.principal<IdentityEntity>()) {
+                        "Identity principal is null"
+                    }
+                    suspendTransaction(db = DatabaseConnection.postgres, readOnly = true) {
+                        call.respond(HttpStatusCode.OK, identityEntity.toResponse())
+                    }
+                }
+
                 post("/logout") {
                     call.sessions.clear(AuthToken::class)
                     call.respond(HttpStatusCode.OK, "You successfully logged out")
