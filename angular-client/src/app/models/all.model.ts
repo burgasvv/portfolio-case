@@ -1,9 +1,4 @@
 
-export interface AuthRequest {
-    email: string
-    password: string
-}
-
 export interface ImageDependency {
     id: string
     name: string
