@@ -25,22 +25,22 @@ fun Application.configureSecurityRouter() {
 
     val config = ApplicationConfig("application.yaml")
 
-    intercept(ApplicationCallPipeline.Setup) {
-
-        when(call.request.httpMethod) {
-            HttpMethod.Post, HttpMethod.Delete, HttpMethod.Patch, HttpMethod.Put -> {
-                call.request.setHeader(
-                    HttpHeaders.Origin,
-                    listOf(config.property("api.ktor-server.url").getString())
-                )
-                call.request.setHeader(
-                    "X-CSRF-Token", listOf(UUID.randomUUID().toString())
-                )
-                proceed()
-            }
-            else -> proceed()
-        }
-    }
+//    intercept(ApplicationCallPipeline.Setup) {
+//
+//        when(call.request.httpMethod) {
+//            HttpMethod.Post, HttpMethod.Delete, HttpMethod.Patch, HttpMethod.Put -> {
+//                call.request.setHeader(
+//                    HttpHeaders.Origin,
+//                    listOf(config.property("api.angular-client.url").getString())
+//                )
+//                call.request.setHeader(
+//                    "X-CSRF-Token", listOf(UUID.randomUUID().toString())
+//                )
+//                proceed()
+//            }
+//            else -> proceed()
+//        }
+//    }
 
     routing {
 

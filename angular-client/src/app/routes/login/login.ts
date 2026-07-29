@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+import {Component, inject} from '@angular/core';
+import {AuthService} from '../../services/auth/auth-service';
+import {NgForm} from '@angular/forms';
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'app-login',
@@ -6,4 +9,25 @@ import { Component } from '@angular/core';
     templateUrl: './login.html',
     styleUrl: './login.scss',
 })
-export class Login {}
+export class Login {
+
+    private readonly authService = inject(AuthService)
+    private readonly router = inject(Router)
+
+    onSubmit(form: NgForm) {
+        if (form.invalid) return
+        const authRequest = {
+            email: form.value.email,
+            password: form.value.password
+        };
+        this.authService.login(authRequest).subscribe({
+            next: (user) => {
+                this.authService.authenticatedUser.set(user);
+                this.router.navigate(['']).then(r => r);
+            },
+            error: (err) => {
+                console.error('Ошибка авторизации:', err);
+            }
+        });
+    }
+}

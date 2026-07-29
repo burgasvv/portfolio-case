@@ -79,9 +79,9 @@ fun Application.configureSecurity() {
     install(Sessions) {
         cookie<AuthToken>("AUTH_TOKEN") {
             cookie.path = "/"
-            cookie.httpOnly = false
+            cookie.httpOnly = true
             cookie.secure = false
-            cookie.extensions["SameSite"] = "lax"
+            cookie.extensions["SameSite"] = "Lax"
             transform(SessionTransportTransformerMessageAuthentication(
                 config.property("cookie.secret").getString().toByteArray()
             ))
@@ -102,7 +102,14 @@ fun Application.configureSecurity() {
     install(DoubleReceive)
 
     install(CORS) {
-        anyMethod()
+        allowHost("localhost:9000", schemes = listOf("http", "https"))
+        allowHost("localhost:4200", schemes = listOf("http", "https"))
+
+        allowMethod(HttpMethod.Options)
+        allowMethod(HttpMethod.Post)
+        allowMethod(HttpMethod.Get)
+        allowMethod(HttpMethod.Put)
+        allowMethod(HttpMethod.Delete)
 
         allowHeader(HttpHeaders.Host)
         allowHeader(HttpHeaders.Origin)
@@ -112,10 +119,8 @@ fun Application.configureSecurity() {
         allowHeader("X-CSRF-Token")
 
         allowCredentials = true
-        allowSameOrigin = true
-
-        allowHost("localhost:9000")
-        allowHost("localhost:4200")
+        allowNonSimpleContentTypes = true
+        allowXHttpMethodOverride()
     }
 
     install(CSRF) {

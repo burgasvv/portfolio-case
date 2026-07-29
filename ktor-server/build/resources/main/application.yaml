@@ -15,6 +15,8 @@ postgres:
 api:
   ktor-server:
     url: '$KTOR_SERVER_URL:http://localhost:9000'
+  angular-client:
+    url: '$ANGULAR_CLIENT_URL:http://localhost:4200'
 
 jwt:
   secret: '1a091b7f-21db-4ebe-8cec-d55b3836c7fc'
