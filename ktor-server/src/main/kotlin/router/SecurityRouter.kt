@@ -3,12 +3,11 @@ package org.burgas.router
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
-import io.ktor.server.config.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
-import io.ktor.utils.io.*
+import io.ktor.utils.io.InternalAPI
 import org.burgas.dao.IdentityEntity
 import org.burgas.database.DatabaseConnection
 import org.burgas.database.IdentityTable
@@ -18,29 +17,23 @@ import org.burgas.security.JwtConfig
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.transactions.suspendTransaction
 import org.mindrot.jbcrypt.BCrypt
-import java.util.*
+import java.util.UUID
 
 @OptIn(InternalAPI::class)
 fun Application.configureSecurityRouter() {
 
-    val config = ApplicationConfig("application.yaml")
+    intercept(ApplicationCallPipeline.Setup) {
 
-//    intercept(ApplicationCallPipeline.Setup) {
-//
-//        when(call.request.httpMethod) {
-//            HttpMethod.Post, HttpMethod.Delete, HttpMethod.Patch, HttpMethod.Put -> {
-//                call.request.setHeader(
-//                    HttpHeaders.Origin,
-//                    listOf(config.property("api.angular-client.url").getString())
-//                )
-//                call.request.setHeader(
-//                    "X-CSRF-Token", listOf(UUID.randomUUID().toString())
-//                )
-//                proceed()
-//            }
-//            else -> proceed()
-//        }
-//    }
+        when(call.request.httpMethod) {
+            HttpMethod.Put, HttpMethod.Patch, HttpMethod.Delete, HttpMethod.Post -> {
+                call.request.setHeader(
+                    "X-CSRF-Token",
+                    listOf(UUID.randomUUID().toString())
+                )
+            }
+            else -> proceed()
+        }
+    }
 
     routing {
 

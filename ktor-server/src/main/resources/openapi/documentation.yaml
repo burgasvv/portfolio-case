@@ -646,6 +646,15 @@ paths:
               schema:
                 type: "object"
 components:
+  parameters:
+    OriginHeader:
+      name: Origin
+      in: header
+      required: false
+      description: Домен, с которого отправляется запрос (передается браузером автоматически)
+      schema:
+        type: string
+        example: http://localhost:9000
   schemas:
     AuthRequest:
       type: "object"

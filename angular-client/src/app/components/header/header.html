@@ -15,9 +15,9 @@
                 </li>
             </ul>
             @if (authService.isAuthenticated()) {
-                <a class="navbar-text" (click)="onLogout()">Выйти</a>
+                <a class="navbar-text nav-link" (click)="onLogout()" style="cursor: pointer">Выйти</a>
             } @else {
-                <a class="navbar-text" routerLink="/login">Войти</a>
+                <a class="navbar-text nav-link" routerLink="/login">Войти</a>
             }
         </div>
     </div>

@@ -8,6 +8,7 @@
 ###
 POST /api/v1/security/login
 Host: localhost:9000
+Origin: http://localhost:9000
 Content-Type: application/json
 
 {
@@ -18,6 +19,7 @@ Content-Type: application/json
 ###
 POST /api/v1/security/logout
 Host: localhost:9000
+Origin: http://localhost:9000
 
 ###
 GET /api/v1/security/authenticated

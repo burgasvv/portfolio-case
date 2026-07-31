@@ -2,6 +2,7 @@ import {Component, inject} from '@angular/core';
 import {AuthService} from '../../services/auth/auth-service';
 import {NgForm} from '@angular/forms';
 import {Router} from '@angular/router';
+import {AuthRequest} from '../../models/all.model';
 
 @Component({
     selector: 'app-login',
@@ -16,7 +17,7 @@ export class Login {
 
     onSubmit(form: NgForm) {
         if (form.invalid) return
-        const authRequest = {
+        const authRequest: AuthRequest = {
             email: form.value.email,
             password: form.value.password
         };
