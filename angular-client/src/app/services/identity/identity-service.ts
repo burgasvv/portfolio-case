@@ -1,4 +1,4 @@
-import {inject, Service} from '@angular/core';
+import {inject, Input, Service} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {IdentityRequest, IdentityResponse} from '../../models/all.model';
@@ -26,6 +26,6 @@ export class IdentityService {
     }
 
     delete(id: string): Observable<any> {
-        return this.http.delete(`${this.url}/delete?identityId=${id}`)
+        return this.http.delete(`${this.url}/delete?identityId=${id}`, {withCredentials: true})
     }
 }

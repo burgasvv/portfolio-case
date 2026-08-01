@@ -1,18 +1,24 @@
-<div class="card">
-    <div class="card-body">
-        <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
-            <div class="mb-3">
-                <label for="exampleFormControlInput1" class="form-label">Email address</label>
-                <input type="email" class="form-control" id="exampleFormControlInput1" name="email" placeholder="name@example.com" ngModel required>
-            </div>
-            <div class="mb-3">
-                <label for="inputPassword5" class="form-label">Password</label>
-                <input type="password" id="inputPassword5" class="form-control" name="password" aria-describedby="passwordHelpBlock" ngModel required>
-            </div>
-            <div class="mb-3 row">
-                <button type="submit" class="btn btn-primary col-1">Войти</button>
-                <a class="col-1" routerLink="/registration">Регистрация</a>
-            </div>
-        </form>
+@if (authService.isAuthenticated()) {
+    <div class="card">
+        <div class="card-body">Вы уже успешно вошли в систему</div>
     </div>
-</div>
+} @else {
+    <div class="card">
+        <div class="card-body">
+            <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Email address</label>
+                    <input type="email" class="form-control" id="exampleFormControlInput1" name="email" placeholder="name@example.com" ngModel required>
+                </div>
+                <div class="mb-3">
+                    <label for="inputPassword5" class="form-label">Password</label>
+                    <input type="password" id="inputPassword5" class="form-control" name="password" aria-describedby="passwordHelpBlock" ngModel required>
+                </div>
+                <div class="mb-3 row">
+                    <button type="submit" class="btn btn-primary col-1">Войти</button>
+                    <a class="col-1" routerLink="/registration">Регистрация</a>
+                </div>
+            </form>
+        </div>
+    </div>
+}

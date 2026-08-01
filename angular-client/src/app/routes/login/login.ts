@@ -12,7 +12,7 @@ import {AuthRequest} from '../../models/all.model';
 })
 export class Login {
 
-    private readonly authService = inject(AuthService)
+    protected readonly authService = inject(AuthService)
     private readonly router = inject(Router)
 
     onSubmit(form: NgForm) {
