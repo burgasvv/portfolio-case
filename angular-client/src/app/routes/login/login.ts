@@ -14,6 +14,7 @@ export class Login {
 
     protected readonly authService = inject(AuthService)
     private readonly router = inject(Router)
+    errorMessage: string | null = null
 
     onSubmit(form: NgForm) {
         if (form.invalid) return
@@ -27,7 +28,11 @@ export class Login {
                 this.router.navigate(['']).then(r => r);
             },
             error: (err) => {
-                console.error('Ошибка авторизации:', err);
+                if (err.status === 400) {
+                    this.errorMessage = "Ошибка аутентификации."
+                } else {
+                    this.errorMessage = 'Что-то пошло не так. Попробуйте позже.'
+                }
             }
         });
     }

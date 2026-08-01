@@ -6,18 +6,35 @@
     <div class="card">
         <div class="card-body">
             <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
+                <p>{{errorMessage}}</p>
                 <div class="mb-3">
                     <label for="exampleFormControlInput1" class="form-label">Email address</label>
-                    <input type="email" class="form-control" id="exampleFormControlInput1" name="email" placeholder="name@example.com" ngModel required>
+                    <input type="email" class="form-control" id="exampleFormControlInput1" name="email" placeholder="name@example.com"
+                           ngModel required email #email="ngModel">
+                    @if (email.touched && email.invalid) {
+                        @if (email.errors?.['required']) {
+                            <small>Email обязателен для заполнения.</small>
+                        }
+                        @if (email.errors?.['email']) {
+                            <small>Некорректный формат Email.</small>
+                        }
+                    }
                 </div>
                 <div class="mb-3">
                     <label for="inputPassword5" class="form-label">Password</label>
-                    <input type="password" id="inputPassword5" class="form-control" name="password" aria-describedby="passwordHelpBlock" ngModel required>
+                    <input type="password" id="inputPassword5" class="form-control" name="password" aria-describedby="passwordHelpBlock"
+                           ngModel required minlength="5" #password="ngModel">
+                    @if (password.touched && password.invalid) {
+                        @if (password.errors?.[`required`]) {
+                            <small>Пароль обязателен для заполнения.</small>
+                        }
+                        @if (password.errors?.[`minlength`]) {
+                            <small>Пароль должен быть не менее {{ password.errors?.['minlength'].requiredLength }} символов.</small>
+                        }
+                    }
                 </div>
-                <div class="mb-3 row">
-                    <button type="submit" class="btn btn-primary col-1">Войти</button>
-                    <a class="col-1" routerLink="/registration">Регистрация</a>
-                </div>
+                <button type="submit" class="btn btn-primary">Войти</button>
+                <a routerLink="/registration" style="margin-left: 20px">Регистрация</a>
             </form>
         </div>
     </div>
