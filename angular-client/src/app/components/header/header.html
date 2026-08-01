@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
+<nav class="navbar navbar-expand-lg bg-body-tertiary" style="height: 70px">
     <div class="container-fluid">
         <a class="navbar-brand" routerLink="">portfolio-case</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
@@ -15,7 +15,8 @@
                 </li>
             </ul>
             @if (authService.isAuthenticated()) {
-                <a class="navbar-text nav-link" routerLink="/identities/by-id" [queryParams]="{identityId: authService.authenticatedUser()?.id}">
+                <a class="navbar-text nav-link" routerLink="/identities/by-id" [queryParams]="{identityId: authService.authenticatedUser()?.id}"
+                   style="margin-right: 15px">
                     <app-image-thumbnail [imageId]="authService.authenticatedUser()?.image?.id"></app-image-thumbnail>
                 </a>
                 <a class="navbar-text nav-link" (click)="onLogout()" style="cursor: pointer">Выйти</a>
