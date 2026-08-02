@@ -11,10 +11,20 @@ import { Registration } from './routes/registration/registration';
 import { FormsModule } from '@angular/forms';
 import { IdentityPage } from './routes/identity-page/identity-page';
 import { ImageThumbnail } from './components/image-thumbnail/image-thumbnail';
-import {NgOptimizedImage} from '@angular/common';
+import { NgOptimizedImage } from '@angular/common';
+import { ImagePage } from './components/image-page/image-page';
 
 @NgModule({
-    declarations: [App, Header, Footer, Login, Registration, IdentityPage, ImageThumbnail],
+    declarations: [
+        App,
+        Header,
+        Footer,
+        Login,
+        Registration,
+        IdentityPage,
+        ImageThumbnail,
+        ImagePage,
+    ],
     imports: [BrowserModule, AppRoutingModule, FormsModule, NgOptimizedImage],
     providers: [provideBrowserGlobalErrorListeners(), provideHttpClient()],
     bootstrap: [App],
