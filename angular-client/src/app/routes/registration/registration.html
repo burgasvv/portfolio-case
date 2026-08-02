@@ -1,1 +1,11 @@
-<p>registration works!</p>
+@if (authService.isAuthenticated() && authService.authenticatedUser()?.authority != Authority.ADMIN) {
+    <div class="card">
+        <div class="card-body">Чтобы зарегистрировать нового пользователя, выйдите из своего акаунта.
+            Только администраторы могу регистрировать других пользователей в системе.
+        </div>
+    </div>
+} @else if (authService.isAuthenticated() && authService.authenticatedUser()?.authority == Authority.ADMIN) {
+
+} @else {
+
+}

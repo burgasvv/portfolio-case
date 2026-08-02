@@ -15,6 +15,9 @@
                 </li>
             </ul>
             @if (authService.isAuthenticated()) {
+                @if (authService.authenticatedUser()?.authority == Authority.ADMIN) {
+                    <a class="navbar-text nav-link nav-pointer nav-registration" routerLink="/registration">Регистрация пользователей</a>
+                }
                 <a class="navbar-text nav-link" routerLink="/identities/by-id" [queryParams]="{identityId: authService.authenticatedUser()?.id}"
                    style="margin-right: 15px">
                     <app-image-thumbnail [imageId]="authService.authenticatedUser()?.image?.id"></app-image-thumbnail>

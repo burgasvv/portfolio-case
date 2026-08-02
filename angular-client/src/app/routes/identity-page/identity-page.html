@@ -13,9 +13,24 @@
                 <hr class="text-muted">
 
                 <div class="container">
-                    <div>Telegram: {{identity()?.telegram}}</div>
-                    <div>Whatsapp: {{identity()?.whatsapp}}</div>
-                    <div>Max: {{identity()?.max}}</div>
+                    @if (identity()?.telegram) {
+                        <div class="img-icon">
+                            <img style="border-radius: 50%" ngSrc="/files/images/telegram-icon.png" alt="Telegram icon" height="30" width="30"> :
+                            <span>{{identity()?.telegram}}</span>
+                        </div>
+                    }
+                    @if (identity()?.whatsapp) {
+                        <div class="img-icon">
+                            <img style="border-radius: 50%" ngSrc="/files/images/whatsapp-icon.png" alt="Telegram icon" height="30" width="30"> :
+                            <span>{{identity()?.whatsapp}}</span>
+                        </div>
+                    }
+                    @if (identity()?.max) {
+                        <div class="img-icon">
+                            <img style="border-radius: 50%" ngSrc="/files/images/max-icon.jpg" alt="Telegram icon" height="30" width="30"> :
+                            <span>{{identity()?.max}}</span>
+                        </div>
+                    }
                 </div>
             </div>
         </div>

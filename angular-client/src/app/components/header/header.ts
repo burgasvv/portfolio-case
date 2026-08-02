@@ -1,6 +1,7 @@
 import {Component, inject, NgZone} from '@angular/core';
 import {AuthService} from '../../services/auth/auth-service';
 import {Router} from '@angular/router';
+import {Authority} from '../../models/all.model';
 
 @Component({
     selector: 'app-header',
@@ -30,4 +31,6 @@ export class Header {
             this.router.navigate(['/login']).then(r => r)
         });
     }
+
+    protected readonly Authority = Authority;
 }
