@@ -13,6 +13,9 @@ import { IdentityPage } from './routes/identity-page/identity-page';
 import { ImageThumbnail } from './components/image-thumbnail/image-thumbnail';
 import { NgOptimizedImage } from '@angular/common';
 import { ImagePage } from './components/image-page/image-page';
+import { ImageCard } from './components/image-card/image-card';
+import { IdentityCard } from './components/identity-card/identity-card';
+import { IdentityList } from './routes/identity-list/identity-list';
 
 @NgModule({
     declarations: [
@@ -24,6 +27,9 @@ import { ImagePage } from './components/image-page/image-page';
         IdentityPage,
         ImageThumbnail,
         ImagePage,
+        ImageCard,
+        IdentityCard,
+        IdentityList,
     ],
     imports: [BrowserModule, AppRoutingModule, FormsModule, NgOptimizedImage],
     providers: [provideBrowserGlobalErrorListeners(), provideHttpClient()],

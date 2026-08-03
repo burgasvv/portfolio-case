@@ -1,0 +1,28 @@
+<div class="card w-75 mb-4 border-0 shadow-sm hover-lift">
+    <div class="card-body p-4">
+        <div class="d-flex align-items-center justify-content-between gap-4">
+            <!-- Левая часть: Аватар и Текст -->
+            <div class="d-flex align-items-center gap-3">
+                <div class="flex-shrink-0 bg-light rounded-circle overflow-hidden shadow-sm" style="width: 56px; height: 56px;">
+                    <app-image-card [imageId]="identity.image?.id"></app-image-card>
+                </div>
+                <div>
+                    <h5 class="card-title mb-1 fw-bold text-dark text-gradient">
+                        {{ identity.firstname }} {{ identity.lastname }}
+                    </h5>
+                    <p class="card-text text-secondary small mb-0 fw-medium d-flex align-items-center gap-1">
+                        <i class="bi bi-briefcase small text-muted"></i>
+                        {{ identity.portfolio?.profession?.name || 'Специалист' }}
+                    </p>
+                </div>
+            </div>
+
+            <!-- Правая часть: Действие -->
+            <div class="flex-shrink-0">
+                <button type="button" class="btn btn-primary" routerLink="/identities/by-id" [queryParams]="{identityId: identity.id}">
+                    Смотреть профиль
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

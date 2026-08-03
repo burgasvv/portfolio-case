@@ -7,6 +7,11 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarText">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                @if (authService.isAuthenticated() && authService.authenticatedUser()?.authority == Authority.ADMIN) {
+                    <li class="nav-item">
+                        <a class="nav-link" routerLink="/identities">Пользователи</a>
+                    </li>
+                }
                 <li class="nav-item">
                     <a class="nav-link" href="#">Features</a>
                 </li>

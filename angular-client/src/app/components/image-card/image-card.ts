@@ -2,17 +2,17 @@ import {Component, effect, inject, input, signal} from '@angular/core';
 import {ImageService} from '../../services/image/image-service';
 
 @Component({
-    selector: 'app-image-page',
+    selector: 'app-image-card',
     standalone: false,
-    templateUrl: './image-page.html',
-    styleUrl: './image-page.scss',
+    templateUrl: './image-card.html',
+    styleUrl: './image-card.scss',
 })
-export class ImagePage {
+export class ImageCard {
 
     private readonly imageService = inject(ImageService)
     imageId = input<string, string | undefined>('', {
         transform: (value) => value ?? ''
-    })
+    });
     imageUrl = signal<string | null>(null)
 
     constructor() {
@@ -37,10 +37,10 @@ export class ImagePage {
     }
 
     private cleanupUrl(): void {
-        const currentUrl = this.imageUrl()
+        const currentUrl = this.imageUrl();
         if (currentUrl) {
-            URL.revokeObjectURL(currentUrl)
+            URL.revokeObjectURL(currentUrl);
         }
-        this.imageUrl.set(null)
+        this.imageUrl.set(null);
     }
 }
