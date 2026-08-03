@@ -1,89 +1,98 @@
-<div class="container py-5">
-    <div class="row g-4">
+@if (
+    authService.isAuthenticated() && (authService.authenticatedUser()?.id == identity()?.id) ||
+    authService.authenticatedUser()?.authority == Authority.ADMIN
+) {
+    <div class="container py-5">
+        <div class="row g-4">
 
-        <!-- Левая колонка: Основная карточка профиля -->
-        <div class="col-lg-4">
-            <div class="card border-0 shadow-sm text-center p-4">
-                <div class="position-relative d-inline-block mx-auto mb-3">
-                    <app-image-page [imageId]="identity()?.image?.id"></app-image-page>
-                </div>
-                <h4 class="mb-1 fw-bold">{{identity()?.firstname}} {{identity()?.lastname}}</h4>
-                <p class="text-muted small mb-3">{{identity()?.portfolio?.profession?.name}}</p>
+            <!-- Левая колонка: Основная карточка профиля -->
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm text-center p-4">
+                    <div class="position-relative d-inline-block mx-auto mb-3">
+                        <app-image-page [imageId]="identity()?.image?.id"></app-image-page>
+                    </div>
+                    <h4 class="mb-1 fw-bold">{{identity()?.firstname}} {{identity()?.lastname}}</h4>
+                    <p class="text-muted small mb-3">{{identity()?.portfolio?.profession?.name}}</p>
 
-                <hr class="text-muted">
+                    <hr class="text-muted">
 
-                <div class="container">
-                    @if (identity()?.telegram) {
-                        <div class="img-icon">
-                            <img style="border-radius: 50%" ngSrc="/files/images/telegram-icon.png" alt="Telegram icon" height="30" width="30"> :
-                            <span>{{identity()?.telegram}}</span>
-                        </div>
-                    }
-                    @if (identity()?.whatsapp) {
-                        <div class="img-icon">
-                            <img style="border-radius: 50%" ngSrc="/files/images/whatsapp-icon.png" alt="Telegram icon" height="30" width="30"> :
-                            <span>{{identity()?.whatsapp}}</span>
-                        </div>
-                    }
-                    @if (identity()?.max) {
-                        <div class="img-icon">
-                            <img style="border-radius: 50%" ngSrc="/files/images/max-icon.jpg" alt="Telegram icon" height="30" width="30"> :
-                            <span>{{identity()?.max}}</span>
-                        </div>
-                    }
-                </div>
-            </div>
-        </div>
-
-        <!-- Правая колонка: Детальная информация и активность -->
-        <div class="col-lg-8">
-            <!-- Личные данные -->
-            <div class="card border-0 shadow-sm p-4 mb-4">
-                <h5 class="fw-bold mb-4">Личная информация</h5>
-                <div class="row g-3">
-                    <div class="col-sm-6">
-                        <label class="text-muted small d-block">Полное имя</label>
-                        <span class="fw-semibold">{{identity()?.firstname}} {{identity()?.lastname}} {{identity()?.patronymic}}</span>
-                    </div>
-                    <div class="col-sm-6">
-                        <label class="text-muted small d-block">Электронная почта</label>
-                        <span class="fw-semibold">{{identity()?.email}}</span>
-                    </div>
-                    <div class="col-sm-6">
-                        <label class="text-muted small d-block">Телефон</label>
-                        <span class="fw-semibold">{{identity()?.phone}}</span>
-                    </div>
-                    <div class="col-sm-6">
-                        <label class="text-muted small d-block">Authority</label>
-                        <span class="fw-semibold">{{identity()?.authority}}</span>
-                    </div>
-                    <div class="col-sm-6">
-                        <label class="text-muted small d-block">Статус профиля</label>
-                        @if (identity()?.status == true) {
-                            <span class="fw-semibold">Активен</span>
-                        } @else {
-                            <span class="fw-semibold">Неактивен</span>
+                    <div class="container">
+                        @if (identity()?.telegram) {
+                            <div class="img-icon">
+                                <img style="border-radius: 50%" ngSrc="/files/images/telegram-icon.png" alt="Telegram icon" height="30" width="30"> :
+                                <span>{{identity()?.telegram}}</span>
+                            </div>
+                        }
+                        @if (identity()?.whatsapp) {
+                            <div class="img-icon">
+                                <img style="border-radius: 50%" ngSrc="/files/images/whatsapp-icon.png" alt="Telegram icon" height="30" width="30"> :
+                                <span>{{identity()?.whatsapp}}</span>
+                            </div>
+                        }
+                        @if (identity()?.max) {
+                            <div class="img-icon">
+                                <img style="border-radius: 50%" ngSrc="/files/images/max-icon.jpg" alt="Telegram icon" height="30" width="30"> :
+                                <span>{{identity()?.max}}</span>
+                            </div>
                         }
                     </div>
                 </div>
-                <div class="mt-4">
-                    <label class="text-muted small d-block">О себе</label>
-                    @if (identity()?.about != null) {
-                        <p class="mb-0 text-secondary">{{identity()?.about}}</p>
-                    } @else {
-                        <p class="mb-0 text-secondary">Личная информация</p>
-                    }
-                </div>
             </div>
 
+            <!-- Правая колонка: Детальная информация и активность -->
             <div class="col-lg-8">
+                <!-- Личные данные -->
                 <div class="card border-0 shadow-sm p-4 mb-4">
-                    <h5 class="fw-bold mb-4">Портфолио</h5>
+                    <h5 class="fw-bold mb-4">Личная информация</h5>
                     <div class="row g-3">
-                        <span class="fw-semibold">{{identity()?.portfolio?.profession?.name}}</span>
+                        <div class="col-sm-6">
+                            <label class="text-muted small d-block">Полное имя</label>
+                            <span class="fw-semibold">{{identity()?.firstname}} {{identity()?.lastname}} {{identity()?.patronymic}}</span>
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="text-muted small d-block">Электронная почта</label>
+                            <span class="fw-semibold">{{identity()?.email}}</span>
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="text-muted small d-block">Телефон</label>
+                            <span class="fw-semibold">{{identity()?.phone}}</span>
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="text-muted small d-block">Authority</label>
+                            <span class="fw-semibold">{{identity()?.authority}}</span>
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="text-muted small d-block">Статус профиля</label>
+                            @if (identity()?.status == true) {
+                                <span class="fw-semibold">Активен</span>
+                            } @else {
+                                <span class="fw-semibold">Неактивен</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <label class="text-muted small d-block">О себе</label>
+                        @if (identity()?.about != null) {
+                            <p class="mb-0 text-secondary">{{identity()?.about}}</p>
+                        } @else {
+                            <p class="mb-0 text-secondary">Личная информация</p>
+                        }
+                    </div>
+                </div>
+
+                <div class="col-lg-8">
+                    <div class="card border-0 shadow-sm p-4 mb-4">
+                        <h5 class="fw-bold mb-4">Портфолио</h5>
+                        <div class="row g-3">
+                            <span class="fw-semibold">{{identity()?.portfolio?.profession?.name}}</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+} @else {
+    <div class="card">
+        <div class="card-body">Только админ и владелец профиля могут просматривать эту страницу профиля</div>
+    </div>
+}

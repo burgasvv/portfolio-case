@@ -5,7 +5,181 @@
         </div>
     </div>
 } @else if (authService.isAuthenticated() && authService.authenticatedUser()?.authority == Authority.ADMIN) {
-
+    <div class="card">
+        <div class="card-body">
+            <h2>Регистрация от имени Администратора</h2>
+            <form #registrationForm="ngForm" (ngSubmit)="submitByAdmin(registrationForm)">
+                <p>{{errorMessage}}</p>
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Электронная почта</label>
+                    <input type="email" class="form-control" id="exampleFormControlInput1" name="email" placeholder="name@example.com"
+                           ngModel required email #email="ngModel">
+                    @if (email.touched && email.invalid) {
+                        @if (email.errors?.['required']) {
+                            <small>Email обязателен для заполнения.</small>
+                        }
+                        @if (email.errors?.['email']) {
+                            <small>Некорректный формат Email.</small>
+                        }
+                    }
+                </div>
+                <div class="mb-3">
+                    <label for="inputPassword5" class="form-label">Пароль</label>
+                    <input type="password" id="inputPassword5" class="form-control" name="password" aria-describedby="passwordHelpBlock"
+                           ngModel required minlength="5" #password="ngModel">
+                    @if (password.touched && password.invalid) {
+                        @if (password.errors?.[`required`]) {
+                            <small>Пароль обязателен для заполнения.</small>
+                        }
+                        @if (password.errors?.[`minlength`]) {
+                            <small>Пароль должен быть не менее {{ password.errors?.['minlength'].requiredLength }} символов.</small>
+                        }
+                    }
+                </div>
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Телефон</label>
+                    <input type="text" class="form-control" id="exampleFormControlInput1" name="phone" placeholder="+7phone" ngModel>
+                </div>
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Telegram</label>
+                    <input type="text" class="form-control" id="exampleFormControlInput1" name="telegram" placeholder="@telegram" ngModel>
+                </div>
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Whatsapp</label>
+                    <input type="text" class="form-control" id="exampleFormControlInput1" name="whatsapp" placeholder="@whatsapp" ngModel>
+                </div>
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Max</label>
+                    <input type="text" class="form-control" id="exampleFormControlInput1" name="max" placeholder="@max" ngModel>
+                </div>
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Фамилия</label>
+                    <input type="text" class="form-control" id="exampleFormControlInput1" name="firstname" placeholder="Фамилия"
+                           ngModel required #firstname="ngModel">
+                    @if (firstname.touched && firstname.invalid) {
+                        @if (firstname.errors?.['required']) {
+                            <small>Фамилия обязательна для заполнения.</small>
+                        }
+                    }
+                </div>
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Имя</label>
+                    <input type="text" class="form-control" id="exampleFormControlInput1" name="lastname" placeholder="Имя"
+                           ngModel required #lastname="ngModel">
+                    @if (lastname.touched && lastname.invalid) {
+                        @if (lastname.errors?.['required']) {
+                            <small>Имя обязательно для заполнения.</small>
+                        }
+                    }
+                </div>
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Отчество</label>
+                    <input type="text" class="form-control" id="exampleFormControlInput1" name="patronymic" placeholder="Отчество"
+                           ngModel required #patronymic="ngModel">
+                    @if (patronymic.touched && patronymic.invalid) {
+                        @if (patronymic.errors?.['required']) {
+                            <small>Отчество обязательно для заполнения.</small>
+                        }
+                    }
+                </div>
+                <div class="mb-3">
+                    <label for="exampleFormControlTextarea1" class="form-label">О себе</label>
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="about" placeholder="Личная информация" ngModel></textarea>
+                </div>
+                <button type="submit" class="btn btn-secondary"
+                        data-bs-toggle="popover" data-bs-placement="right"
+                        data-bs-custom-class="custom-popover"
+                        data-bs-title="Custom popover"
+                        data-bs-content="This popover is themed via CSS variables.">
+                    Зарегистрировать пользователя
+                </button>
+            </form>
+        </div>
+    </div>
 } @else {
-
+    <div class="card">
+        <div class="card-body">
+            <h2>Регистрация</h2>
+            <form #registrationForm="ngForm" (ngSubmit)="submitByGuest(registrationForm)">
+                <p>{{errorMessage}}</p>
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Электронная почта</label>
+                    <input type="email" class="form-control" id="exampleFormControlInput1" name="email" placeholder="name@example.com"
+                           ngModel required email #email="ngModel">
+                    @if (email.touched && email.invalid) {
+                        @if (email.errors?.['required']) {
+                            <small>Email обязателен для заполнения.</small>
+                        }
+                        @if (email.errors?.['email']) {
+                            <small>Некорректный формат Email.</small>
+                        }
+                    }
+                </div>
+                <div class="mb-3">
+                    <label for="inputPassword5" class="form-label">Пароль</label>
+                    <input type="password" id="inputPassword5" class="form-control" name="password" aria-describedby="passwordHelpBlock"
+                           ngModel required minlength="5" #password="ngModel">
+                    @if (password.touched && password.invalid) {
+                        @if (password.errors?.[`required`]) {
+                            <small>Пароль обязателен для заполнения.</small>
+                        }
+                        @if (password.errors?.[`minlength`]) {
+                            <small>Пароль должен быть не менее {{ password.errors?.['minlength'].requiredLength }} символов.</small>
+                        }
+                    }
+                </div>
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Телефон</label>
+                    <input type="text" class="form-control" id="exampleFormControlInput1" name="phone" placeholder="+7phone" ngModel>
+                </div>
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Telegram</label>
+                    <input type="text" class="form-control" id="exampleFormControlInput1" name="telegram" placeholder="@telegram" ngModel>
+                </div>
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Whatsapp</label>
+                    <input type="text" class="form-control" id="exampleFormControlInput1" name="whatsapp" placeholder="@whatsapp" ngModel>
+                </div>
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Max</label>
+                    <input type="text" class="form-control" id="exampleFormControlInput1" name="max" placeholder="@max" ngModel>
+                </div>
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Фамилия</label>
+                    <input type="text" class="form-control" id="exampleFormControlInput1" name="firstname" placeholder="Фамилия"
+                           ngModel required #firstname="ngModel">
+                    @if (firstname.touched && firstname.invalid) {
+                        @if (firstname.errors?.['required']) {
+                            <small>Фамилия обязательна для заполнения.</small>
+                        }
+                    }
+                </div>
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Имя</label>
+                    <input type="text" class="form-control" id="exampleFormControlInput1" name="lastname" placeholder="Имя"
+                           ngModel required #lastname="ngModel">
+                    @if (lastname.touched && lastname.invalid) {
+                        @if (lastname.errors?.['required']) {
+                            <small>Имя обязательно для заполнения.</small>
+                        }
+                    }
+                </div>
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Отчество</label>
+                    <input type="text" class="form-control" id="exampleFormControlInput1" name="patronymic" placeholder="Отчество"
+                           ngModel required #patronymic="ngModel">
+                    @if (patronymic.touched && patronymic.invalid) {
+                        @if (patronymic.errors?.['required']) {
+                            <small>Отчество обязательно для заполнения.</small>
+                        }
+                    }
+                </div>
+                <div class="mb-3">
+                    <label for="exampleFormControlTextarea1" class="form-label">О себе</label>
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="about" placeholder="Личная информация" ngModel></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+            </form>
+        </div>
+    </div>
 }

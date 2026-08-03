@@ -9,7 +9,7 @@
             <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
                 <p>{{errorMessage}}</p>
                 <div class="mb-3">
-                    <label for="exampleFormControlInput1" class="form-label">Email address</label>
+                    <label for="exampleFormControlInput1" class="form-label">Электронная почта</label>
                     <input type="email" class="form-control" id="exampleFormControlInput1" name="email" placeholder="name@example.com"
                            ngModel required email #email="ngModel">
                     @if (email.touched && email.invalid) {
@@ -22,7 +22,7 @@
                     }
                 </div>
                 <div class="mb-3">
-                    <label for="inputPassword5" class="form-label">Password</label>
+                    <label for="inputPassword5" class="form-label">Пароль</label>
                     <input type="password" id="inputPassword5" class="form-control" name="password" aria-describedby="passwordHelpBlock"
                            ngModel required minlength="5" #password="ngModel">
                     @if (password.touched && password.invalid) {

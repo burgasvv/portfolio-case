@@ -25,7 +25,7 @@ export class Login {
         this.authService.login(authRequest).subscribe({
             next: (user) => {
                 this.authService.authenticatedUser.set(user);
-                this.router.navigate(['identities/by-id'], {queryParams: {identityId: user.id}}).then(r => r);
+                this.router.navigate(['identities/by-id'], {queryParams: {identityId: user.id}}).then(r => r)
             },
             error: (err) => {
                 if (err.status === 400) {
@@ -34,6 +34,6 @@ export class Login {
                     this.errorMessage = 'Что-то пошло не так. Попробуйте позже.'
                 }
             }
-        });
+        })
     }
 }

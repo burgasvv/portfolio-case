@@ -1,4 +1,4 @@
-import {inject, Input, Service} from '@angular/core';
+import {inject, Service} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {IdentityRequest, IdentityResponse} from '../../models/all.model';
@@ -18,7 +18,7 @@ export class IdentityService {
     }
 
     create(identityRequest: IdentityRequest): Observable<IdentityResponse> {
-        return this.http.post<IdentityResponse>(`${this.url}/create`, identityRequest)
+        return this.http.post<IdentityResponse>(`${this.url}/create`, identityRequest, {withCredentials: true})
     }
 
     update(identityRequest: IdentityRequest): Observable<IdentityResponse> {
